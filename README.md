@@ -6,7 +6,6 @@
 ---
 
 ## 团队 Logo
-（将生成的 Logo 图片放在仓库 `assets/logo.png` 并在此处显示）
 ![团队 Logo](assets/logo.png)
 
 ---
