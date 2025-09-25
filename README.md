@@ -16,7 +16,7 @@
 - 团队成员：
   - 成员 陈琨辉（GitHub:@sureyoung86-byte） — 角色：Project Manager
   - 成员 梅宇杰（GitHub: @xklong） — 角色：摸鱼大王
-  - 成员C（GitHub: @usernameC） — 角色：测试 / 运维
+  - 成员 笑面虎（GitHub: @usernameC） — 角色：责任神
   - 成员D（GitHub: @usernameD） — 角色：UI / 设计
   - 成员
 ---
