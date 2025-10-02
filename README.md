@@ -1,7 +1,7 @@
-# *Noidea*
-# :rocket: 「我真没招了」 软件工程小组主页
-
-> 我真没招了
+<div style="text-align:center">
+	<h1><em>Noidea</em></h1>
+	「我真没招了」 软件工程小组主页
+</div>
 
 ---
 
@@ -39,5 +39,3 @@
   - 成员 肖铭昊（GitHub: [@Kortice](https://github.com/Kortice)） — 角色：
   - 成员 吴同堃（GitHub: [@1yushi](https://github.com/1yushi)） — 角色：
   - 成员 王汉森 （Github:[@qwqvpwp](https://github.com/qwqvpwp)） — 角色：
-
----
