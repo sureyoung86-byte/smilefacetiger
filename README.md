@@ -1,4 +1,4 @@
-<div style="text-align:center">
+<div align="center">
 	<h1><em>Noidea</em></h1>
 	「我真没招了」 软件工程小组主页
 </div>
