@@ -1,0 +1,1 @@
+pip install flask requests  # requests用于调用豆包API
