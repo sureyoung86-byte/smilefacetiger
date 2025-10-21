@@ -1,11 +1,268 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智能天气出行助手</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('./asset/rem.png');
+      /* background-size: auto; */
+      background-size: cover;
+      background-position: center;
+      transition: background-image 1s ease-in-out;
+      color: #fff;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.5);
+      text-align: center;
+      padding: 1em;
+      position: relative;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+
+    .settings-btn {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      background: transparent;
+      border: none;
+      font-size: 1.2em;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .query-section, .result-section, .chat-section {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    .form-box {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    input, button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    input {
+      flex: 1;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .weather-card, .suggestion-card {
+      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .chat-box {
+      background: rgba(255, 255, 255, 0.15);
+      height: 200px;
+      overflow-y: auto;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.5);
+    }
+  </style>
 </head>
 <body>
-    
+  <header>
+    <h1>智能天气出行助手</h1>
+  </header>
+
+  <main>
+    <section class="query-section">
+      <h2>查询天气</h2>
+      <div class="form-box">
+        <input type="text" id="city-input" placeholder="输入城市，如：福州市 / 厦门市 / 北京市" />
+        <input type="date" id="date-input" />
+        <button id="search-btn">查看天气</button>
+      </div>
+    </section>
+
+    <section class="result-section">
+      <div class="weather-card">
+        <h3>🌦 当前天气</h3>
+        <p><strong>城市：</strong><span id="city-name">——</span></p>
+        <p><strong>日期：</strong><span id="date-info">——</span></p>
+        <p><strong>温度：</strong><span id="temp">——</span>°C</p>
+        <p><strong>湿度：</strong><span id="humidity">——</span>%</p>
+        <p><strong>风速：</strong><span id="wind">——</span> m/s</p>
+        <p><strong>天气状况：</strong><span id="condition">——</span></p>
+      </div>
+
+      <div class="suggestion-card">
+        <h3>🧭 出行建议</h3>
+        <p id="suggestion">请先输入城市和日期查询天气。</p>
+      </div>
+    </section>
+
+    <section class="chat-section">
+      <h3>💬 对话记录</h3>
+      <div class="chat-box" id="chat-box">
+        <p><em>系统：</em>你好！请输入城市和日期进行查询 ☀️</p>
+      </div>
+    </section>
+  </main>
+
+ 
+
+  <script>
+    const searchBtn = document.getElementById("search-btn");
+    const cityInput = document.getElementById("city-input");
+    const dateInput = document.getElementById("date-input");
+    const chatBox = document.getElementById("chat-box");
+
+    const cityNameSpan = document.getElementById("city-name");
+    const dateSpan = document.getElementById("date-info");
+    const tempSpan = document.getElementById("temp");
+    const humiditySpan = document.getElementById("humidity");
+    const windSpan = document.getElementById("wind");
+    const conditionSpan = document.getElementById("condition");
+    const suggestionP = document.getElementById("suggestion");
+
+    // 背景图映射表
+    const weatherBackgrounds = {
+      "晴": "url('./asset/sunny.jpg')",
+      "多云": "url('./asset/cloudy.jpg')",
+      "阴": "url('./asset/cloudy1.jpg')",
+      "雨": "url('./asset/rainy.jpg')",
+      "雪": "url('./asset/snowy.jpg')"
+    };
+
+    // 点击“查看天气”按钮
+    searchBtn.addEventListener("click", () => {
+      const city = cityInput.value.trim();
+      const date = dateInput.value;
+
+      // 定义三组示例数据
+      const weatherDataList = [
+        {
+          city: "福州市",
+          date: "2025-10-22",
+          temperature: 26,
+          humidity: 68,
+          wind: 3,
+          condition: "多云转晴",
+          suggestion: "天气舒适，适合出行，但早晚略凉，建议带薄外套。"
+        },
+        {
+          city: "厦门市",
+          date: "2025-10-21",
+          temperature: 32,
+          humidity: 68,
+          wind: 3,
+          condition: "晴",
+          suggestion: "天气炎热，出行注意防晒。"
+        },
+        {
+          city: "北京市",
+          date: "2025-10-23",
+          temperature: 22,
+          humidity: 67,
+          wind: 3,
+          condition: "雨",
+          suggestion: "气温适中，建议轻便外出，注意早晚温差。"
+        }
+      ];
+
+      // 查找匹配项
+      const weatherData = weatherDataList.find(
+        (item) => item.city === city && item.date === date
+      );
+
+      if (!weatherData) {
+        alert("未找到该城市或日期的天气数据，请输入正确的城市与日期");
+        addChat("系统", "暂无该城市/日期的天气数据。");
+        return;
+      }
+
+      // 更新天气信息
+      cityNameSpan.textContent = weatherData.city;
+      dateSpan.textContent = weatherData.date;
+      tempSpan.textContent = weatherData.temperature;
+      humiditySpan.textContent = weatherData.humidity;
+      windSpan.textContent = weatherData.wind;
+      conditionSpan.textContent = weatherData.condition;
+      suggestionP.textContent = weatherData.suggestion;
+
+      // 聊天记录
+      addChat("用户", `查询 ${city} ${date} 的天气`);
+      addChat("系统", `${weatherData.city}（${weatherData.date}）天气：${weatherData.condition}，温度 ${weatherData.temperature}°C。${weatherData.suggestion}`);
+
+      // 修改背景
+      changeBackground(weatherData.condition);
+    });
+
+    // 聊天记录函数
+    function addChat(sender, message) {
+      const p = document.createElement("p");
+      p.innerHTML = `<strong>${sender}：</strong> ${message}`;
+      chatBox.appendChild(p);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // 背景切换函数
+    function changeBackground(condition) {
+    let normalized = condition.replace(/天|转/g, "").trim(); // 去除多余字符并修剪空格
+    let matchedKey;
+
+    switch (normalized) {
+        case "晴": matchedKey = "晴"; break;
+        case "多云": matchedKey = "多云"; break;
+        case "阴": matchedKey = "阴"; break;
+        case "雨": matchedKey = "雨"; break;
+        case "雪": matchedKey = "雪"; break;
+    }
+
+    const bgUrl = weatherBackgrounds[matchedKey];
+    if (bgUrl) {
+        document.body.style.backgroundImage = bgUrl;
+    } else {
+        console.warn(`未找到对应背景图: ${matchedKey}`); // 调试用
+        document.body.style.backgroundImage = weatherBackgrounds["多云"]; // 确保总有图可显示
+    }
+}
+  </script>
 </body>
 </html>
